@@ -79,7 +79,7 @@ class _MyHomePageState extends State<DashBoard> {
                           'On',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {/* ... */},
+                        onPressed: () { publish('heaton');},
                       ),
                       RaisedButton(
                         color: Colors.red,
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<DashBoard> {
                           'Off',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {/* ... */},
+                        onPressed: () { publish('heatoff');},
                       ),
                     ],
                   ),
@@ -111,7 +111,7 @@ class _MyHomePageState extends State<DashBoard> {
                           'On',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {/* ... */},
+                        onPressed: () { publish('airon');},
                       ),
                       RaisedButton(
                         color: Colors.red,
@@ -119,7 +119,8 @@ class _MyHomePageState extends State<DashBoard> {
                           'Off',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {/* ... */},
+                        onPressed: () { publish('airoff');
+                        },
                       ),
                     ],
                   ),
@@ -142,7 +143,6 @@ class _MyHomePageState extends State<DashBoard> {
       ),
       body: ListView(
         children: <Widget>[
-          control,
           SizedBox(
             height: 10.0,
           ),
@@ -167,6 +167,9 @@ class _MyHomePageState extends State<DashBoard> {
       ),
       drawer: drawer,
     );
+  }
+  void publish(String value) {
+    Mqttwrapper().publish(value);
   }
 
   _createListTile(String title, String value, String initials) {
