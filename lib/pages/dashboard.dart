@@ -52,62 +52,79 @@ class _MyHomePageState extends State<DashBoard> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const ListTile(
-              leading: Icon(Icons.control_point),
+              leading: IconButton(
+                icon: Icon(Icons.control_point),
+                onPressed: null,
+              ),
               title: Text(
                 'Control Panel',
                 style: TextStyle(
                     color: Colors.deepOrange, fontWeight: FontWeight.bold),
               ),
             ),
-            const ListTile(
-              leading: Icon(Icons.lightbulb_outline),
-              title: Text('Heat Control'),
+            ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.lightbulb_outline),
+                onPressed: null,
+              ),
+              title: Row(
+                children: [
+                  Text('Heat Control'),
+                  Spacer(),
+                  ButtonBar(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.green,
+                        child: const Text(
+                          'On',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                      RaisedButton(
+                        color: Colors.red,
+                        child: const Text(
+                          'Off',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            ButtonBar(
-              children: <Widget>[
-                RaisedButton(
-                  color: Colors.green,
-                  child: const Text(
-                    'On',
-                    style: TextStyle(color: Colors.white),
+            ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.all_out),
+                onPressed: null,
+              ),
+              title: Row(
+                children: [
+                  Text('Air Control'),
+                  Spacer(),
+                  ButtonBar(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.green,
+                        child: const Text(
+                          'On',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                      RaisedButton(
+                        color: Colors.red,
+                        child: const Text(
+                          'Off',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                    ],
                   ),
-                  onPressed: () {/* ... */},
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  child: const Text(
-                    'Off',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {/* ... */},
-                ),
-              ],
-            ),
-            // You placed these inside the buttonbar widget
-            // They should be inside the column not the buttonbar
-            const ListTile(
-              leading: Icon(Icons.all_out),
-              title: Text('Air Control'),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                RaisedButton(
-                  color: Colors.green,
-                  child: const Text(
-                    'On',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {/* ... */},
-                ),
-                RaisedButton(
-                  color: Colors.red,
-                  child: const Text(
-                    'Off',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {/* ... */},
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
