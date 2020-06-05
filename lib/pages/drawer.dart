@@ -9,11 +9,16 @@ final drawer = Drawer(child: drawerItems);
 final drawerHeader = UserAccountsDrawerHeader(
   accountName: Text('Admin'),
   accountEmail: Text('larteyjoshua@gmail.com'),
-  currentAccountPicture:GFAvatar(
-      backgroundImage: Image.asset('assets/images/joshua.jpg'),
-      shape: GFAvatarShape.standard
-  )
+  currentAccountPicture: GFAvatar(
+    // You can't use Image.asset for backgroundImage
+    // because it requires an ImageProvider not Image widget
+    backgroundImage: AssetImage(
+      'assets/images/joshua.jpg',
+    ),
+    shape: GFAvatarShape.standard,
+  ),
 );
+
 final drawerItems = Builder(builder: (context) {
   return ListView(
     children: <Widget>[

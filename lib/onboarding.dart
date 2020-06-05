@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/login_page.dart';
 
-class Onboarding extends StatefulWidget {
-  Onboarding({Key key}) : super(key: key);
-
-  _OnboardingState createState() => _OnboardingState();
-}
-
-class _OnboardingState extends State<Onboarding> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-//  @override
-//  void dispose() {
-//    super.dispose();
-//  }
+class Onboarding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width / 1.2,

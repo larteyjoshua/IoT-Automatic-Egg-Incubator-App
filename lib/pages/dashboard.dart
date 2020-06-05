@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/mqtt.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
@@ -18,9 +17,8 @@ class _MyHomePageState extends State<DashBoard> {
   double _temp = 0.0;
   double _hum = 0.0;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     Mqttwrapper().mqttController.stream.listen(listenToClient);
   }
@@ -30,7 +28,7 @@ class _MyHomePageState extends State<DashBoard> {
 //
 //  }
 
-  void listenToClient(Map data){
+  void listenToClient(Map data) {
     if (this.mounted) {
       setState(() {
         print("I am coming from the iot device $data");
@@ -46,80 +44,127 @@ class _MyHomePageState extends State<DashBoard> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final control= Center(
+    final control = Center(
       child: Card(
         child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-        const ListTile(
-        leading: Icon(Icons.control_point),
-        title: Text('Control Panel',style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),),
-      ),
-      const ListTile(
-        leading: Icon(Icons.lightbulb_outline),
-        title: Text('Heat Control'),
-      ),
-      ButtonBar(
-        children: <Widget>[
-          RaisedButton(
-            color: Colors.green,
-            child: const Text('On',style: TextStyle(color: Colors.white),),
-            onPressed: () { /* ... */ },
-          ),
-          RaisedButton(
-            color: Colors.red,
-            child: const Text('Off',  style: TextStyle(color: Colors.white),),
-            onPressed: () { /* ... */ },
-          ),
-          const ListTile(
-            leading: Icon(Icons.all_out),
-            title: Text('Air Control'),
-          ),
-          ButtonBar(
-            children: <Widget>[
-              RaisedButton(
-                color: Colors.green,
-                child: const Text('On', style: TextStyle(color: Colors.white),),
-                onPressed: () { /* ... */ },
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.control_point),
+                onPressed: null,
               ),
-              RaisedButton(
-                color: Colors.red,
-                child: const Text('Off', style: TextStyle(color: Colors.white),),
-                onPressed: () { /* ... */ },
+              title: Text(
+                'Control Panel',
+                style: TextStyle(
+                    color: Colors.deepOrange, fontWeight: FontWeight.bold),
               ),
-            ],
-          ),
-        ],
+            ),
+            ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.lightbulb_outline),
+                onPressed: null,
+              ),
+              title: Row(
+                children: [
+                  Text('Heat Control'),
+                  Spacer(),
+                  ButtonBar(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.green,
+                        child: const Text(
+                          'On',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                      RaisedButton(
+                        color: Colors.red,
+                        child: const Text(
+                          'Off',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.all_out),
+                onPressed: null,
+              ),
+              title: Row(
+                children: [
+                  Text('Air Control'),
+                  Spacer(),
+                  ButtonBar(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.green,
+                        child: const Text(
+                          'On',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                      RaisedButton(
+                        color: Colors.red,
+                        child: const Text(
+                          'Off',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {/* ... */},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-            ]),
-      )
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Dashboard',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
 //        elevation: 0.5,
       ),
-      body:
-      ListView(
+      body: ListView(
         children: <Widget>[
           control,
-          SizedBox(height: 10.0,),
-          _createListTile("Temperature",  _temp.toString(), "C",),
-          SizedBox(height: 5.0,),
-          _createListTile("Humidity", _hum.toString(), "%", ),
-          SizedBox(height: 5.0,),
+          SizedBox(
+            height: 10.0,
+          ),
+          _createListTile(
+            "Temperature",
+            _temp.toString(),
+            "C",
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          _createListTile(
+            "Humidity",
+            _hum.toString(),
+            "%",
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
           control
         ],
       ),
-
-      
       drawer: drawer,
     );
   }
@@ -140,17 +185,31 @@ class _MyHomePageState extends State<DashBoard> {
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              child: Text(initials, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold ),),
+              child: Text(
+                initials,
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
             ),
-
-            title:  Text(title, style: TextStyle(
-                color: Colors.black87,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold
-            ),) ,
-            subtitle: !_isLoading ? Text(value, style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 48.0, color: Colors.black),) : Center(child:CircularProgressIndicator(strokeWidth: 1.0,)),
+            title: Text(
+              title,
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            subtitle: !_isLoading
+                ? Text(
+                    value,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 48.0,
+                        color: Colors.black),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
+                  )),
           ),
         ),
       ),
@@ -158,7 +217,7 @@ class _MyHomePageState extends State<DashBoard> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 }
