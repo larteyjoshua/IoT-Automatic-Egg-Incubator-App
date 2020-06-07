@@ -68,4 +68,13 @@ class DatabaseHelper{
     Database db = await this.database;
     db.delete(readingstable).then((i)=>print('Database deleted'));
   }
+
+
+  Future<dynamic> getReadalldataList() async {
+    Database db = await this.database;
+    List<Map<dynamic, dynamic>> alldata = await db.rawQuery('select $colId, $coltime, $coltemperature, $colhumidity From $readingstable ORDER BY $colId ASC' );
+    return alldata;
+  }
 }
+
+

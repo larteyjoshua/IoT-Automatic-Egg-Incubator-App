@@ -13,6 +13,6 @@ class Datareading {
 
   Map<String, dynamic> toJson()=> {
     'temperature':temperature,
-    'moisture':humidity,
+    'humidity':humidity,
   };
 }

@@ -2,7 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
-
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:async';
+import 'dart:io';
 class About extends StatefulWidget {
   About({Key key, this.title}) : super(key: key);
 
@@ -10,10 +13,24 @@ class About extends StatefulWidget {
 
   @override
   _MyAboutPageState createState() => _MyAboutPageState();
+
+}
+class row {
+  final int id;
+  final String time;
+  final double temperature;
+  final double humidity;
+
+  row(
+      {@required this.id,
+        @required this.time,
+        @required this.temperature,
+        @required this.humidity,});
 }
 class _MyAboutPageState extends State<About> {
   final Color primaryColor = Color(0xff99cc33);
   //DatabaseHelper databaseHelper = DatabaseHelper();
+  final List<row> rows= [];
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +76,48 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
+    getCsv() async {
+      DatabaseHelper().getReadalldataList().then((data) async {
+        for (Map map in data) {
+          rows.add(row(
+              id: map['id'],
+              time: map['time'],
+              temperature: double.tryParse('${map['temperature']}'),
+              humidity: double.tryParse('${map['humidity']}')
+          ));
+        }
+        List<List<dynamic>> rowdata = List<List<dynamic>>();
+        for (int i = 0; i < rows.length; i++) {
+//row refer to each column of a row in csv file and rows refer to each row in a file
+          List<dynamic> rowconvert = List();
+          rowconvert.add(rows[i].id);
+          rowconvert.add(rows[i].time);
+          rowconvert.add(rows[i].temperature);
+          rowconvert.add(rows[i].humidity);
+          rowdata.add(rowconvert);
+        }
+//        await SimplePermissions.requestPermission(
+//            Permission.WriteExternalStorage);
+//        bool checkPermission = await SimplePermissions.checkPermission(
+//            Permission.WriteExternalStorage);
+//        if (checkPermission) {
+          // print(rowdata);
+          //store file in documents folder
+          String dir = (await getExternalStorageDirectory()).absolute.path + "/";
+          final file = "$dir";
+          print(" FILE " + file);
+          File f = new File(file+" Incubator data.csv");
+          String Incubator_Databse = const ListToCsvConverter().convert(rowdata);
+          f.writeAsString(Incubator_Databse);
+          print('data downloaded');
+          print(rowdata);
+//        }
+      });
+
+      }
+
+
+
 
     Future<void> _datadownload() async {
       return showDialog<void>(
@@ -85,8 +144,8 @@ class _MyAboutPageState extends State<About> {
               FlatButton(
                 child: Text('Download'),
                 onPressed: () {
-//                  DatabaseHelper().deleteAll();
-//                  Navigator.of(context).pop();
+                getCsv();
+                Navigator.of(context).pop();
                 },
               ),
             ],
@@ -255,3 +314,7 @@ RaisedButton createButton(Color color, Future<void> Function() perform, String t
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
   );
 }
+
+
+
+

@@ -92,7 +92,6 @@ class _MyTempGraphPageState extends State< TempGraph> {
   void initState(){
     super.initState();
   Mqttwrapper().mqttController.stream.listen(listenToClient);
-//    myTypedFuture();
    fetchValues();
   }
 
@@ -111,8 +110,8 @@ class _MyTempGraphPageState extends State< TempGraph> {
 
 
   Future myTypedFuture() async {
-    await Future.delayed(Duration(seconds: 3));
-   // fetchValues();
+    await Future.delayed(Duration(seconds: 4));
+    fetchValues();
   }
 
   void listenToClient(final data) {

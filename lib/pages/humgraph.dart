@@ -106,7 +106,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
     });
   }
   Future myTypedFuture() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 4));
     fetchValues();
   }
 
@@ -115,7 +115,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
       setState(() {
         print("I am coming from the iot device $data");
 //      databaseHelper.InsertDatareading(Datareading.fromJson(data));
-        double h = double.parse(data["moisture"].toString());
+        double h = double.parse(data["humidity"].toString());
         _isLoading = true;
         _hum = h;
         humpoints.clear();
