@@ -17,13 +17,13 @@ class About extends StatefulWidget {
   _MyAboutPageState createState() => _MyAboutPageState();
 }
 
-class row {
+class Row {
   final int id;
   final String time;
   final double temperature;
   final double humidity;
 
-  row({
+  Row({
     @required this.id,
     @required this.time,
     @required this.temperature,
@@ -34,7 +34,7 @@ class row {
 class _MyAboutPageState extends State<About> {
   final Color primaryColor = Color(0xff99cc33);
   //DatabaseHelper databaseHelper = DatabaseHelper();
-  final List<row> rows = [];
+  final List<Row> rows = [];
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class _MyAboutPageState extends State<About> {
     getCsv() async {
       DatabaseHelper().getReadalldataList().then((data) async {
         for (Map map in data) {
-          rows.add(row(
+          rows.add(Row(
               id: map['id'],
               time: map['time'],
               temperature: double.tryParse('${map['temperature']}'),
@@ -107,10 +107,9 @@ class _MyAboutPageState extends State<About> {
         if (Platform.isIOS) {
           directory = await getExternalStorageDirectory();
         } else if (Platform.isAndroid) {
-          
           String path = await ExtStorage.getExternalStoragePublicDirectory(
               ExtStorage.DIRECTORY_DOWNLOADS);
-              directory = Directory(path);
+          directory = Directory(path);
         }
 
         print(directory.path);
@@ -190,8 +189,11 @@ class _MyAboutPageState extends State<About> {
               child: ListBody(
                 children: <Widget>[
                   Text(
-                      'Basically, the IoT Automatic Egg Incubator is similar to the type of incubator which can be used as a substitute of poultry chicken to incubate the chicken eggs automatically. It will be helpful for the farmers to incubate the eggs automatically without the need of human intervention, by keeping the physical quantities such as temperature and humidity at required level, so that the fetuses inside them will grow and incubates without the presence of mother.'),
-                  Text(' Vist IoTDev Lab for more detail'),
+                      'Basically, the IoT Automatic Egg Incubator is similar to the type of incubator which can be used as a substitute of poultry chicken to incubate the chicken eggs automatically.'
+                      ' It will be helpful for the farmers to incubate the eggs automatically without the need of human intervention, by keeping the physical quantities such as temperature and humidity at required level,'
+                      ' so that the fetuses inside them will grow and incubates without the presence of mother.'),
+                  SizedBox(height: 16),
+                  Text('Visit IoTDev Lab for more detail.'),
                 ],
               ),
             ),
@@ -220,6 +222,7 @@ class _MyAboutPageState extends State<About> {
                 children: <Widget>[
                   Text(
                       'Joshua Lartey is a final year student of UCC. Both student are very passionate about this programming, hene the came about of this project'),
+                  SizedBox(height: 16),
                   Text('Call Joshua on 0249643365'),
                 ],
               ),
@@ -248,8 +251,9 @@ class _MyAboutPageState extends State<About> {
               child: ListBody(
                 children: <Widget>[
                   Text(
-                      'We are located on the Campus of UCC Science Block on the second floor'),
-                  Text(' Call Us on 0249643365'),
+                      'We are located on the Campus of UCC Science Block on the second floor.'),
+                  SizedBox(height: 16),
+                  Text('Call Us on 0249643365'),
                 ],
               ),
             ),
@@ -277,8 +281,10 @@ class _MyAboutPageState extends State<About> {
               child: ListBody(
                 children: <Widget>[
                   Text(
-                      'This is a well establish and well purpose lab under the Department of Computer science and Information technology for learning and development of embedded system and IoT Solutions'),
-                  Text(' Vist IoTDev Lab for more detail'),
+                      'This is a well establish and well purpose lab under the Department of Computer science'
+                      ' and Information technology for learning and development of embedded system and IoT Solutions'),
+                  SizedBox(height: 16),
+                  Text('Visit IoTDev Lab for more detail'),
                 ],
               ),
             ),
