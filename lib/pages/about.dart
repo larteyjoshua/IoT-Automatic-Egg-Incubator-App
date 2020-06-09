@@ -1,4 +1,4 @@
-
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
@@ -6,6 +6,8 @@ import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+
 class About extends StatefulWidget {
   About({Key key, this.title}) : super(key: key);
 
@@ -13,24 +15,26 @@ class About extends StatefulWidget {
 
   @override
   _MyAboutPageState createState() => _MyAboutPageState();
-
 }
-class row {
+
+class Row {
   final int id;
   final String time;
   final double temperature;
   final double humidity;
 
-  row(
-      {@required this.id,
-        @required this.time,
-        @required this.temperature,
-        @required this.humidity,});
+  Row({
+    @required this.id,
+    @required this.time,
+    @required this.temperature,
+    @required this.humidity,
+  });
 }
+
 class _MyAboutPageState extends State<About> {
   final Color primaryColor = Color(0xff99cc33);
   //DatabaseHelper databaseHelper = DatabaseHelper();
-  final List<row> rows= [];
+  final List<Row> rows = [];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,8 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('This will delete all the data collected so far with the app.'),
+                  Text(
+                      'This will delete all the data collected so far with the app.'),
                   Text(' Are you sure?'),
                 ],
               ),
@@ -76,15 +81,15 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
+
     getCsv() async {
       DatabaseHelper().getReadalldataList().then((data) async {
         for (Map map in data) {
-          rows.add(row(
+          rows.add(Row(
               id: map['id'],
               time: map['time'],
               temperature: double.tryParse('${map['temperature']}'),
-              humidity: double.tryParse('${map['humidity']}')
-          ));
+              humidity: double.tryParse('${map['humidity']}')));
         }
         List<List<dynamic>> rowdata = List<List<dynamic>>();
         for (int i = 0; i < rows.length; i++) {
@@ -96,28 +101,42 @@ class _MyAboutPageState extends State<About> {
           rowconvert.add(rows[i].humidity);
           rowdata.add(rowconvert);
         }
-//        await SimplePermissions.requestPermission(
-//            Permission.WriteExternalStorage);
-//        bool checkPermission = await SimplePermissions.checkPermission(
-//            Permission.WriteExternalStorage);
-//        if (checkPermission) {
-          // print(rowdata);
-          //store file in documents folder
-          String dir = (await getExternalStorageDirectory()).absolute.path + "/";
-          final file = "$dir";
-          print(" FILE " + file);
-          File f = new File(file+" Incubator data.csv");
-          String Incubator_Databse = const ListToCsvConverter().convert(rowdata);
-          f.writeAsString(Incubator_Databse);
-          print('data downloaded');
-          print(rowdata);
-//        }
+
+        Directory directory;
+
+        if (Platform.isIOS) {
+          directory = await getExternalStorageDirectory();
+        } else if (Platform.isAndroid) {
+          String path = await ExtStorage.getExternalStoragePublicDirectory(
+              ExtStorage.DIRECTORY_DOWNLOADS);
+          directory = Directory(path);
+        }
+
+        print(directory.path);
+
+        File f = new File('${directory.path}/Incubator data.csv');
+        String incubatorDatabse = const ListToCsvConverter().convert(rowdata);
+        await f.writeAsString(incubatorDatabse);
+        print('data downloaded');
+        print("File Path: ${f.path}");
+        print(rowdata);
       });
+    }
 
+    Future<bool> checkPermission() async {
+      var status = await Permission.storage.status;
+
+      if (status.isUndetermined || status.isDenied) {
+        // Don't have permission yet
+        if (await Permission.storage.shouldShowRequestRationale) {
+          return await Permission.storage.request().isGranted;
+        } else {
+          return await Permission.storage.request().isGranted;
+        }
+      } else {
+        return status.isGranted;
       }
-
-
-
+    }
 
     Future<void> _datadownload() async {
       return showDialog<void>(
@@ -129,7 +148,8 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('This will download app database into the download folder.'),
+                  Text(
+                      'This will download app database into the download folder.'),
                   Text(' Are you sure?'),
                 ],
               ),
@@ -143,9 +163,13 @@ class _MyAboutPageState extends State<About> {
               ),
               FlatButton(
                 child: Text('Download'),
-                onPressed: () {
-                getCsv();
-                Navigator.of(context).pop();
+                onPressed: () async {
+                  if (await checkPermission()) {
+                    getCsv();
+                  } else {
+                    print('No permission');
+                  }
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -164,8 +188,12 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Basically, the IoT Automatic Egg Incubator is similar to the type of incubator which can be used as a substitute of poultry chicken to incubate the chicken eggs automatically. It will be helpful for the farmers to incubate the eggs automatically without the need of human intervention, by keeping the physical quantities such as temperature and humidity at required level, so that the fetuses inside them will grow and incubates without the presence of mother.'),
-                  Text(' Vist IoTDev Lab for more detail'),
+                  Text(
+                      'Basically, the IoT Automatic Egg Incubator is similar to the type of incubator which can be used as a substitute of poultry chicken to incubate the chicken eggs automatically.'
+                      ' It will be helpful for the farmers to incubate the eggs automatically without the need of human intervention, by keeping the physical quantities such as temperature and humidity at required level,'
+                      ' so that the fetuses inside them will grow and incubates without the presence of mother.'),
+                  SizedBox(height: 16),
+                  Text('Visit IoTDev Lab for more detail.'),
                 ],
               ),
             ),
@@ -192,7 +220,9 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Joshua Lartey is a final year student of UCC. Both student are very passionate about this programming, hene the came about of this project'),
+                  Text(
+                      'Joshua Lartey is a final year student of UCC. Both student are very passionate about this programming, hene the came about of this project'),
+                  SizedBox(height: 16),
                   Text('Call Joshua on 0249643365'),
                 ],
               ),
@@ -220,8 +250,10 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('We are located on the Campus of UCC Science Block on the second floor'),
-                  Text(' Call Us on 0249643365'),
+                  Text(
+                      'We are located on the Campus of UCC Science Block on the second floor.'),
+                  SizedBox(height: 16),
+                  Text('Call Us on 0249643365'),
                 ],
               ),
             ),
@@ -248,8 +280,11 @@ class _MyAboutPageState extends State<About> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('This is a well establish and well purpose lab under the Department of Computer science and Information technology for learning and development of embedded system and IoT Solutions'),
-                  Text(' Vist IoTDev Lab for more detail'),
+                  Text(
+                      'This is a well establish and well purpose lab under the Department of Computer science'
+                      ' and Information technology for learning and development of embedded system and IoT Solutions'),
+                  SizedBox(height: 16),
+                  Text('Visit IoTDev Lab for more detail'),
                 ],
               ),
             ),
@@ -266,44 +301,66 @@ class _MyAboutPageState extends State<About> {
       );
     }
 
-
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
             'About',
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
           centerTitle: true,
 //        elevation: 0.5,
         ),
-        body: ListView(padding: const EdgeInsets.fromLTRB(15,0,15,0),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
           children: <Widget>[
             logo,
-            SizedBox(height: 2.0,),
+            SizedBox(
+              height: 2.0,
+            ),
             createButton(Colors.deepOrange, _aboutProjet, 'About Project'),
-
-            SizedBox(height: 3.0,),
-            createButton(Colors.deepOrange, _aboutIoTDevLab, 'About IoTDev Lab'),
-
-            SizedBox(height: 3.0,),
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(
+                Colors.deepOrange, _aboutIoTDevLab, 'About IoTDev Lab'),
+            SizedBox(
+              height: 3.0,
+            ),
             createButton(Colors.deepOrange, _aboutStudent, 'About Student'),
-
-            SizedBox(height: 3.0,),
-            createButton(Colors.deepOrange, _contactUs,'Contact Us'),
-            SizedBox(height: 3.0,),
-            createButton(Colors.deepOrange, _datadownload, 'Download App Data', ),
-
-            SizedBox(height: 3.0,),
-            createButton(Colors.deepOrange, _showMyDialog, 'Reset App Data', )
-
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(Colors.deepOrange, _contactUs, 'Contact Us'),
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(
+              Colors.deepOrange,
+              _datadownload,
+              'Download App Data',
+            ),
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(
+              Colors.deepOrange,
+              _showMyDialog,
+              'Reset App Data',
+            )
           ],
         ),
-        drawer: Drawer(child: drawer,)
-    );
+        drawer: Drawer(
+          child: drawer,
+        ));
   }
 }
 
-RaisedButton createButton(Color color, Future<void> Function() perform, String text,  ) {
+RaisedButton createButton(
+  Color color,
+  Future<void> Function() perform,
+  String text,
+) {
   return RaisedButton(
     color: color,
     onPressed: () async => perform(),
@@ -314,7 +371,3 @@ RaisedButton createButton(Color color, Future<void> Function() perform, String t
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
   );
 }
-
-
-
-
