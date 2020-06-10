@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
 import 'package:csv/csv.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
@@ -120,6 +121,7 @@ class _MyAboutPageState extends State<About> {
         print('data downloaded');
         print("File Path: ${f.path}");
         print(rowdata);
+        await OpenFile.open(f.path);
       });
     }
 
