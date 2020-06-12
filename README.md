@@ -1,7 +1,7 @@
 # IoT Automatic Egg Incubator
 
  The IoT Automatic Egg Incubator is similar to the type of incubator which can be used as a substitute of poultry chicken to incubate the chicken eggs automatically. It will be helpful for the farmers to incubate their eggs automatically without the need of human intervention, by keeping the physical quantities such as temperature and humidity at required level, so that the fetuses inside them will grow and incubates without the presence of mother.
- This project is made up of Hardware and Mobile app. The Pictures for both Hardware and Software will be uploaded soon as the project is near completion.
+ This project is made up of Hardware and Mobile app. The Pictures for Hardware  will be uploaded soon as the project is near completion.
 ## Getting Started
 
 The Following Flutter packages were so far used:
@@ -21,6 +21,12 @@ The Following Flutter packages were so far used:
 <img src="appics/home.png" width="250">  <img src="appics/login.png" width="250"> <img src="appics/about1.png" width="250">
 
 <img src="appics/drawer.png" width="250"> <img src="appics/dashboard1.png" width="250"> <img src="appics/dashboard2.png" width="250">
+
+<img src="appics/temp1.png" width="250">  <img src="appics/temp2.png" width="250"> <img src="appics/about2.png" width="250">
+
+<img src="appics/hum1.png" width="250">  <img src="appics/hum2.png" width="250"> <img src="appics/about5.png" width="250">
+
+<img src="appics/about.png" width="250">  <img src="appics/about3.png" width="250"> <img src="appics/excelpage.png" width="250">
 
 
 A few resources to get you started if this is your first Flutter project:
