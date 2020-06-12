@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
 import 'package:csv/csv.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
@@ -34,7 +35,6 @@ class Row {
 class _MyAboutPageState extends State<About> {
   final Color primaryColor = Color(0xff99cc33);
   //DatabaseHelper databaseHelper = DatabaseHelper();
-  final List<Row> rows = [];
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +84,13 @@ class _MyAboutPageState extends State<About> {
 
     getCsv() async {
       DatabaseHelper().getReadalldataList().then((data) async {
+        List<List<dynamic>> rowdata = List<List<dynamic>>();
+
+        // Add headers for various columns
+        rowdata.add(['ID', 'Time', 'Temperature', 'Humidity']);
+
+        final List<Row> rows = [];
+
         for (Map map in data) {
           rows.add(Row(
               id: map['id'],
@@ -91,7 +98,7 @@ class _MyAboutPageState extends State<About> {
               temperature: double.tryParse('${map['temperature']}'),
               humidity: double.tryParse('${map['humidity']}')));
         }
-        List<List<dynamic>> rowdata = List<List<dynamic>>();
+
         for (int i = 0; i < rows.length; i++) {
 //row refer to each column of a row in csv file and rows refer to each row in a file
           List<dynamic> rowconvert = List();
@@ -114,12 +121,16 @@ class _MyAboutPageState extends State<About> {
 
         print(directory.path);
 
-        File f = new File('${directory.path}/Incubator data.csv');
+        String moment =
+            "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}_${DateTime.now().hour}.${DateTime.now().minute}";
+
+        File f = new File('${directory.path}/Incubator Data_$moment.csv');
         String incubatorDatabse = const ListToCsvConverter().convert(rowdata);
         await f.writeAsString(incubatorDatabse);
         print('data downloaded');
         print("File Path: ${f.path}");
         print(rowdata);
+        await OpenFile.open(f.path);
       });
     }
 
@@ -150,7 +161,8 @@ class _MyAboutPageState extends State<About> {
                 children: <Widget>[
                   Text(
                       'This will download app database into the download folder.'),
-                  Text(' Are you sure?'),
+                  SizedBox(height: 16),
+                  Text('Are you sure?'),
                 ],
               ),
             ),

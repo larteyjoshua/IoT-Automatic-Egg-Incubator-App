@@ -20,7 +20,7 @@ final drawerHeader = UserAccountsDrawerHeader(
 );
 
 final drawerItems = Builder(builder: (context) {
-  return ListView(
+  return Column(
     children: <Widget>[
       drawerHeader,
       ListTile(
