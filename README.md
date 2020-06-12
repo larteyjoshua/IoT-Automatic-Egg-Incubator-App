@@ -5,15 +5,15 @@
 ## Getting Started
 
 The Following Flutter packages were so far used:
-  syncfusion_flutter_charts: ^18.1.48
-  path_provider: ^1.6.5
-  sqflite: ^1.3.0
-  mqtt_client: ^5.6.2
-  getflutter: ^1.0.11
-  csv: ^4.0.3
-  permission_handler: ^5.0.0+hotfix.9
-  ext_storage: ^1.0.3
-  open_file: ^3.0.1
+ - syncfusion_flutter_charts: ^18.1.48
+ - path_provider: ^1.6.5
+ - sqflite: ^1.3.0
+ - mqtt_client: ^5.6.2
+ - getflutter: ^1.0.11
+ - csv: ^4.0.3
+ - permission_handler: ^5.0.0+hotfix.9
+ - ext_storage: ^1.0.3
+ - open_file: ^3.0.1
 
 A few resources to get you started if this is your first Flutter project:
 
