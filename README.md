@@ -17,7 +17,10 @@ The Following Flutter packages were so far used:
 
  ## Mobile app Screenshot
  Here Are the screenshot for the mobile app
- <img src="appics/home.png" width="250"> | <img src="appics/login.png" width="250"> |
+
+|<img src="appics/home.png" width="250"> | <img src="appics/login.png" width="250"> |
+
+|<img src="appics/drawer.png" width="250"> | <img src="appics/dashboard1.png" width="250"> |<img src="appics/dashboard2.png" width="250"> |
 
 
 A few resources to get you started if this is your first Flutter project:
