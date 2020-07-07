@@ -68,6 +68,15 @@ final drawerItems = Builder(builder: (context) {
             MaterialPageRoute(builder: (context) => About()),
           );
         },
+      ),
+      ListTile(
+        title: Text('Logout'),
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
       )
     ],
   );

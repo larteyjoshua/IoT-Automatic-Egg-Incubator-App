@@ -74,12 +74,23 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
 
-      if (client != null) {
+      if ( Mqttwrapper.instance.client?.connectionStatus?.state ==
+          MqttConnectionState.connected) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => DashBoard()),
         );
       } else {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Connection failed, Enter Your Details.'),
+            action: SnackBarAction(
+                label: 'OKAY',
+                onPressed: () {
+                  _scaffoldKey.currentState.removeCurrentSnackBar();
+                }),
+          ),
+        );
         Navigator.pop(context);
       }
     }
