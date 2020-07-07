@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/mqtt.dart';
 import 'package:ioteggincubatorapp/pages/dashboard.dart';
@@ -10,6 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _emailController =
+      TextEditingController(text: "larteyjoshua@gmail.com");
+  final _passwordController = TextEditingController(text: "7f8a9110");
+
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -22,19 +27,21 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final email = TextFormField(
+      controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: 'larteyjoshua@gmail.com',
+      // initialValue: 'larteyjoshua@gmail.com',
       decoration: InputDecoration(
-        hintText: 'Username',
+        hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
 
     final password = TextFormField(
+      controller: _passwordController,
       autofocus: false,
-      initialValue: '7f8a9110',
+      // initialValue: '7f8a9110',
       obscureText: true,
       decoration: InputDecoration(
         hintText: 'Password',
@@ -46,20 +53,32 @@ class _LoginPageState extends State<LoginPage> {
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DashBoard()),
-          );
-          ? null
-              : Mqttwrapper()._connectToClient ? Mqttwrapper().client.disconnect() : Mqttwrapper().initializemqtt(),
-        },
-        padding: EdgeInsets.all(12),
+        shape: StadiumBorder(),
+        child: Text('Connect', style: TextStyle(color: Colors.white)),
         color: Colors.deepOrange,
-        child: Text(Mqttwrapper()._connectToClient ? 'Disconnect' : 'Connect', style: TextStyle(color: Colors.white)),
+        onPressed: () async {
+          showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                content: Center(child: CircularProgressIndicator()),
+              );
+            },
+          );
+          final client = await Mqttwrapper.instance.initializemqtt(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+          if (client != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DashBoard()),
+            );
+          } else {
+            Navigator.pop(context);
+          }
+        },
       ),
     );
 
@@ -74,11 +93,11 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text(
-            'MQTT Connection',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
+        title: Text(
+          'MQTT Connection',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
 //        elevation: 0.5,
       ),
       body: Center(

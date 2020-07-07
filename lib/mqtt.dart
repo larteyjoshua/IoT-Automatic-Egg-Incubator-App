@@ -10,16 +10,18 @@ import 'dart:io';
 import 'package:ioteggincubatorapp/models/readings.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
 import 'package:mqtt_client/mqtt_client.dart';
-import'dart:convert';
+import 'dart:convert';
 
 //creating mqtt class
 class Mqttwrapper {
-
-  StreamController<Map<String, dynamic>> mqttController = StreamController
-      .broadcast();
+  StreamController<Map<String, dynamic>> mqttController =
+      StreamController.broadcast();
   static final Mqttwrapper instance = Mqttwrapper._internal();
 
-  factory Mqttwrapper () => instance;
+  factory Mqttwrapper() => instance;
+
+  String email;
+  String password;
 
   Mqttwrapper._internal();
 
@@ -33,7 +35,10 @@ class Mqttwrapper {
   MqttClient client;
   String clientIdentifier = 'android';
 
-  Future<MqttClient> initializemqtt() async {
+  Future<MqttClient> initializemqtt({String email, String password}) async {
+    this.email = email;
+    this.password = password;
+
     final MqttClient client = MqttClient("mqtt.dioty.co", "");
     client.port = 1883;
     client.logging(on: false);
@@ -48,7 +53,7 @@ class Mqttwrapper {
     print("EXAMPLE::MQTT client connecting....");
     client.connectionMessage = connMess;
     try {
-      await client.connect("larteyjoshua@gmail.com", "7f8a9110");
+      await client.connect(email, password);
     } catch (e) {
       print("EXAMPLE::client exception - $e");
       client.disconnect();
@@ -58,10 +63,12 @@ class Mqttwrapper {
     /// Check we are connected
     if (client.connectionStatus.state == MqttConnectionState.connected) {
       print("EXAMPLE::MQTT client connected");
+
       /// Ok, lets try a subscription
-      final String topic = "/larteyjoshua@gmail.com/test"; // Not a wildcard topic
+      final String topic = "/${this.email}/test"; // Not a wildcard topic
       client.subscribe(topic, MqttQos.atMostOnce);
-      final String topictwo = "/larteyjoshua@gmail.com/SensorData"; // Not a wildcard topic
+      final String topictwo =
+          "/${this.email}/SensorData"; // Not a wildcard topic
       client.subscribe(topictwo, MqttQos.atMostOnce);
 
       /// The client has a change notifier object(see the Observable class) which we then listen to to get
@@ -69,12 +76,11 @@ class Mqttwrapper {
       client.updates.listen((List<MqttReceivedMessage> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
         final String pt =
-        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+            MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
         print(
-            "EXAMPLE::Change notification:: topic is <${c[0]
-                .topic}>, payload is <-- $pt -->");
+            "EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->");
         print("");
-        final String topicSensor = "/larteyjoshua@gmail.com/SensorData";
+        final String topicSensor = "/${this.email}/SensorData";
         if (("${c[0].topic}") == (topicSensor)) {
           final datasensor = json.decode(pt);
           mqttController.add(datasensor);
@@ -84,11 +90,11 @@ class Mqttwrapper {
       });
     } else {
       print(
-          "EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, state is ${client
-              .connectionStatus.state}");
+          "EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, state is ${client.connectionStatus.state}");
       client.disconnect();
       exit(-1);
     }
+    this.client = client;
     return client;
   }
 
@@ -96,17 +102,18 @@ class Mqttwrapper {
     if (client != null &&
         client.connectionStatus.state == MqttConnectionState.connected) {
     } else {
-      client = await initializemqtt();
+      client = await initializemqtt(email: this.email, password: this.password);
       if (client == null) {
         return false;
       }
     }
     return true;
   }
+
   Future<void> publish(String value) async {
     if (await _connectToClient() == true) {
       print("EXAMPLE::Publishing our topic");
-      final String pubTopic = "/larteyjoshua@gmail.com/test";
+      final String pubTopic = "/${this.email}/test";
       final MqttClientPayloadBuilder builder = new MqttClientPayloadBuilder();
       builder.addString(value);
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload);
@@ -135,8 +142,6 @@ _onDisconnect() {
 }
 
 @override
-void dispose(){
+void dispose() {
   Mqttwrapper().mqttController.close();
 }
-
-
