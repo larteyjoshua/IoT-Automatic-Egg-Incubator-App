@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/mqtt.dart';
 import 'package:ioteggincubatorapp/pages/dashboard.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -50,44 +51,51 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: StadiumBorder(),
-        child: Text('Connect', style: TextStyle(color: Colors.white)),
-        color: Colors.deepOrange,
-        onPressed: () async {
-          showCupertinoDialog(
-            context: context,
-            builder: (context) {
-              return CupertinoAlertDialog(
-                content: Center(child: CircularProgressIndicator()),
-              );
-            },
-          );
-          final client = await Mqttwrapper.instance.initializemqtt(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
-          );
-
-          if (client != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => DashBoard()),
-            );
-          } else {
-            Navigator.pop(context);
-          }
-        },
-      ),
-    );
-
     final forgotLabel = FlatButton(
       child: Text(
         'Forgot Username and password? Check the device label?',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
+    );
+
+    Future<void> _makeConnection() async {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Center(child: CircularProgressIndicator()),
+          );
+        },
+      );
+      final client = await Mqttwrapper.instance.initializemqtt(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (client != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashBoard()),
+        );
+      } else {
+        Navigator.pop(context);
+      }
+    }
+
+    final loginButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: RaisedButton(
+        shape: StadiumBorder(),
+        child: Text(
+          'Connect',
+          style: TextStyle(color: Colors.white),
+        ),
+        color: Colors.deepOrange,
+        onPressed: () async {
+          await _makeConnection();
+        },
+      ),
     );
 
     return Scaffold(
