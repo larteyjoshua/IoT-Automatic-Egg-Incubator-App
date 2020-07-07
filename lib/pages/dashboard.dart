@@ -46,6 +46,27 @@ class _MyHomePageState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+
+   final refreshed =  FlatButton.icon(
+      icon: Icon(
+        Icons.refresh,
+        color: Colors.white,
+      ),
+      label: Text(
+        "Refresh",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      splashColor: Colors.deepPurple,
+      onPressed: () async {
+        publish('refreshed');
+        });
+
+
     final control = Center(
       child: Card(
         child: Column(
@@ -140,6 +161,9 @@ class _MyHomePageState extends State<DashBoard> {
         ),
         centerTitle: true,
 //        elevation: 0.5,
+          actions: <Widget>[
+            refreshed
+          ]
       ),
       body: ListView(
         children: <Widget>[

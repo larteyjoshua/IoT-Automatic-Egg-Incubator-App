@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ioteggincubatorapp/login_page.dart';
 import 'package:ioteggincubatorapp/pages/about.dart';
 import 'package:ioteggincubatorapp/pages/dashboard.dart';
 import 'package:ioteggincubatorapp/pages/humgraph.dart';
@@ -23,6 +24,15 @@ final drawerItems = Builder(builder: (context) {
   return Column(
     children: <Widget>[
       drawerHeader,
+            ListTile(
+        title: Text('MQTT Connects'),
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+      ),
       ListTile(
         title: Text('Dashboard'),
         onTap: () {
@@ -32,15 +42,6 @@ final drawerItems = Builder(builder: (context) {
           );
         },
       ),
-//      ListTile(
-//        title: Text('Pump Control'),
-//        onTap: () {
-//          Navigator.pushReplacement(
-//            context,
-//            MaterialPageRoute(builder: (context) => PumpControl()),
-//          );
-//        },
-//      ),
       ListTile(
         title: Text('Temperature Graph'),
         onTap: () {

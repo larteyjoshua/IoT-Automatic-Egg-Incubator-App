@@ -3,7 +3,7 @@ import 'package:ioteggincubatorapp/mqtt.dart';
 import 'package:ioteggincubatorapp/onboarding.dart';
 
 void main() {
-  Mqttwrapper().initializemqtt();
+//  Mqttwrapper().initializemqtt();
   runApp(MyApp());
 }
 class MyApp extends StatefulWidget {
