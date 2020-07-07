@@ -12,9 +12,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController =
-      TextEditingController(text: "larteyjoshua@gmail.com");
-  final _passwordController = TextEditingController(text: "7f8a9110");
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +89,37 @@ class _LoginPageState extends State<LoginPage> {
       child: RaisedButton(
         shape: StadiumBorder(),
         child: Text(
-          'Connect',
+          Mqttwrapper.instance.client?.connectionStatus?.state ==
+                  MqttConnectionState.connected
+              ? 'Disconnect'
+              : 'Connect',
           style: TextStyle(color: Colors.white),
         ),
         color: Colors.deepOrange,
-        onPressed: () async {
-          await _makeConnection();
-        },
+        onPressed: Mqttwrapper.instance.client?.connectionStatus?.state ==
+                MqttConnectionState.connected
+            ? () {
+                Mqttwrapper.instance.client.disconnect();
+                _scaffoldKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text('Broker has been disconnected.'),
+                    action: SnackBarAction(
+                        label: 'OKAY',
+                        onPressed: () {
+                          _scaffoldKey.currentState.removeCurrentSnackBar();
+                        }),
+                  ),
+                );
+                setState(() {});
+              }
+            : () async {
+                await _makeConnection();
+              },
       ),
     );
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
