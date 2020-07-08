@@ -74,11 +74,12 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
 
-      if ( Mqttwrapper.instance.client?.connectionStatus?.state ==
+      if (Mqttwrapper.instance.client?.connectionStatus?.state ==
           MqttConnectionState.connected) {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => DashBoard()),
+          (Route<dynamic> route) => false,
         );
       } else {
         _scaffoldKey.currentState.showSnackBar(
