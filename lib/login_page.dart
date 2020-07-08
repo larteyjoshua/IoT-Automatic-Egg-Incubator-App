@@ -102,8 +102,8 @@ class _LoginPageState extends State<LoginPage> {
         child: Text(
           Mqttwrapper.instance.client?.connectionStatus?.state ==
                   MqttConnectionState.connected
-              ? 'Disconnect'
-              : 'Connect',
+              ? 'Logout'
+              : 'Login',
           style: TextStyle(color: Colors.white),
         ),
         color: Colors.deepOrange,
@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-      drawer: drawer,
+//      drawer: drawer,
     );
   }
 }

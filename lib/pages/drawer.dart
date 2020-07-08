@@ -5,6 +5,7 @@ import 'package:ioteggincubatorapp/pages/dashboard.dart';
 import 'package:ioteggincubatorapp/pages/humgraph.dart';
 import 'package:ioteggincubatorapp/pages/tempgraph.dart';
 import 'package:getflutter/getflutter.dart';
+import 'package:ioteggincubatorapp/mqtt.dart';
 
 final drawer = Drawer(child: drawerItems);
 final drawerHeader = UserAccountsDrawerHeader(
@@ -24,15 +25,15 @@ final drawerItems = Builder(builder: (context) {
   return Column(
     children: <Widget>[
       drawerHeader,
-            ListTile(
-        title: Text('MQTT Connects'),
-        onTap: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-          );
-        },
-      ),
+//            ListTile(
+//        title: Text('MQTT Connects'),
+//        onTap: () {
+//          Navigator.pushReplacement(
+//            context,
+//            MaterialPageRoute(builder: (context) => LoginPage()),
+//          );
+//        },
+//      ),
       ListTile(
         title: Text('Dashboard'),
         onTap: () {
@@ -72,6 +73,7 @@ final drawerItems = Builder(builder: (context) {
       ListTile(
         title: Text('Logout'),
         onTap: () {
+          Mqttwrapper.instance.client.disconnect();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
