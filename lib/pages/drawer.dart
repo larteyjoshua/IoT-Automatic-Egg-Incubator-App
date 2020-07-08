@@ -74,9 +74,10 @@ final drawerItems = Builder(builder: (context) {
         title: Text('Logout'),
         onTap: () {
           Mqttwrapper.instance.client.disconnect();
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
+            (Route<dynamic> route) => false,
           );
         },
       )
