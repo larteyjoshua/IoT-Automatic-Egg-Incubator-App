@@ -1,5 +1,6 @@
 import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:ioteggincubatorapp/mqtt.dart';
 import 'package:ioteggincubatorapp/pages/drawer.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
 import 'package:csv/csv.dart';
@@ -189,6 +190,48 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
+    void publish(String value) {
+      Mqttwrapper().publish(value);
+    }
+
+    Future<void> _incudatadownload() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: true, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Downloading'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'This will download app database into the download folder.'),
+                  SizedBox(height: 16),
+                  Text('Are you sure?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('Download'),
+                onPressed: () { publish('getdata');
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+
+
 
     Future<void> _aboutProjet() async {
       return showDialog<void>(
@@ -351,6 +394,14 @@ class _MyAboutPageState extends State<About> {
               Colors.deepOrange,
               _datadownload,
               'Download App Data',
+            ),
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(
+              Colors.deepOrange,
+              _incudatadownload,
+              'Download Incubator Data',
             ),
             SizedBox(
               height: 3.0,

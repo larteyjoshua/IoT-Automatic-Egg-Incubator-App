@@ -10,7 +10,14 @@ import 'dart:io';
 import 'package:ioteggincubatorapp/models/readings.dart';
 import 'package:ioteggincubatorapp/utils/database_helper.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:csv/csv.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:open_file/open_file.dart';
+import 'dart:async';
+import 'dart:io';
 
 //creating mqtt class
 class Mqttwrapper {
@@ -87,6 +94,17 @@ class Mqttwrapper {
           print(datasensor['temperature']);
           databaseHelper.InsertDatareading(Datareading.fromJson(datasensor));
         }
+
+        final String incubator = "/${this.email}/incubatordata";
+        if (("${c[0].topic}") == (incubator)) {
+          dynamic datareceived=pt;
+          barrierDismissible: true; // user must tap button!
+          if (await checkPermission()) {
+        getincuCsv(datareceived);
+        } else {
+        print('No permission');
+        }
+        }
       });
     } else {
       print(
@@ -96,6 +114,20 @@ class Mqttwrapper {
     }
     this.client = client;
     return client;
+  }
+  Future<bool> checkPermission() async {
+    var status = await Permission.storage.status;
+
+    if (status.isUndetermined || status.isDenied) {
+      // Don't have permission yet
+      if (await Permission.storage.shouldShowRequestRationale) {
+        return await Permission.storage.request().isGranted;
+      } else {
+        return await Permission.storage.request().isGranted;
+      }
+    } else {
+      return status.isGranted;
+    }
   }
 
   Future<bool> _connectToClient() async {
@@ -139,6 +171,51 @@ _onConnect() {
 
 _onDisconnect() {
   print("mqtt disconnected");
+}
+getincuCsv(final datareceived) async {
+  List<List<dynamic>> data = List<List<dynamic>>();
+  final List<datareceived> incudata = [];
+  for (int i = 0; i < incudata.length; i++) {
+//row refer to each column of a row in csv file and rows refer to each row in a file
+    List<dynamic> rowconvert = List();
+    rowconvert.add(incudata[i].id);
+    rowconvert.add(incudata[i].time);
+    rowconvert.add(incudata[i].temperature);
+    rowconvert.add(incudata[i].humidity);
+    data.add(rowconvert);
+  }
+
+  Directory directory;
+  if (Platform.isIOS) {
+    directory = await getExternalStorageDirectory();
+  } else if (Platform.isAndroid) {
+    String path = await ExtStorage.getExternalStoragePublicDirectory(
+        ExtStorage.DIRECTORY_DOWNLOADS);
+    directory = Directory(path);
+  }
+
+  print(directory.path);
+
+  String moment =
+      "${DateTime
+      .now()
+      .year}.${DateTime
+      .now()
+      .month}.${DateTime
+      .now()
+      .day}_${DateTime
+      .now()
+      .hour}.${DateTime
+      .now()
+      .minute}";
+
+  File f = new File('${directory.path}/Incubator raw_$moment.csv');
+  String incubatorDatabse = const ListToCsvConverter().convert(data);
+  await f.writeAsString(incubatorDatabse);
+  print('data downloaded');
+  print("File Path: ${f.path}");
+  print(data);
+  await OpenFile.open(f.path);
 }
 
 @override
