@@ -205,7 +205,7 @@ class _MyAboutPageState extends State<About> {
               child: ListBody(
                 children: <Widget>[
                   Text(
-                      'This will download app database into the download folder.'),
+                      'This will download incubator data from the SD card.'),
                   SizedBox(height: 16),
                   Text('Are you sure?'),
                 ],
@@ -230,6 +230,42 @@ class _MyAboutPageState extends State<About> {
       );
     }
 
+
+    Future<void> _incudatadelete() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: true, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Deleting'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'This will delete the incubator data from the SD card.'),
+                  SizedBox(height: 16),
+                  Text('Are you sure?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('delete'),
+                onPressed: () { publish('delete');
+                Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
 
 
@@ -402,6 +438,14 @@ class _MyAboutPageState extends State<About> {
               Colors.deepOrange,
               _incudatadownload,
               'Download Incubator Data',
+            ),
+            SizedBox(
+              height: 3.0,
+            ),
+            createButton(
+              Colors.deepOrange,
+              _incudatadelete,
+              'Delete Incubator Data',
             ),
             SizedBox(
               height: 3.0,
