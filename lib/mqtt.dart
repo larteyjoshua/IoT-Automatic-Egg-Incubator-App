@@ -103,7 +103,7 @@ class Mqttwrapper {
           dynamic incudata=pt;
           print(incudata);
            // checkPermission();
-           //getincuCsv(incudata);
+           getincuCsv(incudata);
         }
 //        else {
 //        print('No permission');
@@ -178,16 +178,18 @@ _onDisconnect() {
   print("mqtt disconnected");
 }
 getincuCsv(dynamic incudata) async {
-  List<List<dynamic>> data = List<List<dynamic>>();
-  for (int i = 0; i < incudata.length; i++) {
-//row refer to each column of a row in csv file and rows refer to each row in a file
-    List<dynamic> rowconvert = List();
-    rowconvert.add(incudata[i].id);
-    rowconvert.add(incudata[i].time);
-    rowconvert.add(incudata[i].temperature);
-    rowconvert.add(incudata[i].humidity);
-    data.add(rowconvert);
-  }
+ // List<List<dynamic>> data = List<List<dynamic>>();
+//  for (int i = 0; i < incudata.length; i++) {
+////row refer to each column of a row in csv file and rows refer to each row in a file
+//    List<dynamic> rowconvert = List();
+//    rowconvert.add(incudata[i].id);
+//    rowconvert.add(incudata[i].time);
+//    rowconvert.add(incudata[i].temperature);
+//    rowconvert.add(incudata[i].humidity);
+//    data.add(rowconvert);
+//  }
+  List<List<dynamic>> csvTable = CsvToListConverter().convert(incudata);
+  print(csvTable);
 
   Directory directory;
   if (Platform.isIOS) {
@@ -214,11 +216,11 @@ getincuCsv(dynamic incudata) async {
       .minute}";
 
   File f = new File('${directory.path}/Incubator raw_$moment.csv');
-  String incubatorDatabse = const ListToCsvConverter().convert(data);
-  await f.writeAsString(incubatorDatabse);
+  String incubatorDatabase = const ListToCsvConverter().convert(csvTable);
+  await f.writeAsString(incubatorDatabase);
   print('data downloaded');
   print("File Path: ${f.path}");
-  print(data);
+  print(csvTable);
   await OpenFile.open(f.path);
 }
 
