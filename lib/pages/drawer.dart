@@ -15,7 +15,7 @@ final drawerHeader = UserAccountsDrawerHeader(
     // You can't use Image.asset for backgroundImage
     // because it requires an ImageProvider not Image widget
     backgroundImage: AssetImage(
-      'assets/images/joshua.jpg',
+      'assets/images/admin.png',
     ),
     shape: GFAvatarShape.standard,
   ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ioteggincubatorapp/login_page.dart';
 
 class Onboarding extends StatelessWidget {
-
+//home page ui
   @override
   Widget build(BuildContext context) {
     return Scaffold(

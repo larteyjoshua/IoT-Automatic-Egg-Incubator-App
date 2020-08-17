@@ -41,7 +41,7 @@ class Mqttwrapper {
   /// files for separate subscribe/publish tests.
   MqttClient client;
   String clientIdentifier = 'android';
-
+//function to connect MQTT
   Future<MqttClient> initializemqtt({String email, String password}) async {
     this.email = email;
     this.password = password;
@@ -72,7 +72,7 @@ class Mqttwrapper {
       print("EXAMPLE::MQTT client connected");
 
       /// Ok, lets try a subscription
-      final String topic = "/${this.email}/test"; // Not a wildcard topic
+      final String topic = "/${this.email}/commands"; // Not a wildcard topic
       client.subscribe(topic, MqttQos.atMostOnce);
       final String topictwo =
           "/${this.email}/SensorData"; // Not a wildcard topic
@@ -146,11 +146,11 @@ class Mqttwrapper {
     }
     return true;
   }
-
+//function to publish in a topic"command"
   Future<void> publish(String value) async {
     if (await _connectToClient() == true) {
       print("EXAMPLE::Publishing our topic");
-      final String pubTopic = "/${this.email}/test";
+      final String pubTopic = "/${this.email}/commands";
       final MqttClientPayloadBuilder builder = new MqttClientPayloadBuilder();
       builder.addString(value);
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload);
@@ -169,28 +169,18 @@ void onDisconnected() {
   print("EXAMPLE::OnDisconnected client callback - Client disconnection");
   exit(-1);
 }
-
+//connecting MQTT
 _onConnect() {
   print("mqtt connected");
 }
-
+//disconnecting MQTT
 _onDisconnect() {
   print("mqtt disconnected");
 }
+//geting data from SD card in incubator
 getincuCsv(dynamic incudata) async {
- // List<List<dynamic>> data = List<List<dynamic>>();
-//  for (int i = 0; i < incudata.length; i++) {
-////row refer to each column of a row in csv file and rows refer to each row in a file
-//    List<dynamic> rowconvert = List();
-//    rowconvert.add(incudata[i].id);
-//    rowconvert.add(incudata[i].time);
-//    rowconvert.add(incudata[i].temperature);
-//    rowconvert.add(incudata[i].humidity);
-//    data.add(rowconvert);
-//  }
   List<List<dynamic>> csvTable = CsvToListConverter().convert(incudata);
   print(csvTable);
-
   Directory directory;
   if (Platform.isIOS) {
     directory = await getExternalStorageDirectory();
@@ -201,7 +191,7 @@ getincuCsv(dynamic incudata) async {
   }
 
   print(directory.path);
-
+//function to get curent time and date
   String moment =
       "${DateTime
       .now()
@@ -214,7 +204,7 @@ getincuCsv(dynamic incudata) async {
       .hour}.${DateTime
       .now()
       .minute}";
-
+//creating file and generating CSV
   File f = new File('${directory.path}/Incubator raw_$moment.csv');
   String incubatorDatabase = const ListToCsvConverter().convert(csvTable);
   await f.writeAsString(incubatorDatabase);

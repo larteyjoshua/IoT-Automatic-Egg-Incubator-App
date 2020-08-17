@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-
+//database helper class
 class DatabaseHelper{
 
   static DatabaseHelper _databaseHelper;
@@ -31,7 +31,7 @@ class DatabaseHelper{
     }
     return _database;
   }
-
+//function to initialize database
   Future<Database> initializedatabase() async {
     Directory directory= await getApplicationDocumentsDirectory();
     String path = directory.path + 'iotirrigation.db';
@@ -45,19 +45,19 @@ class DatabaseHelper{
             '$coltemperature  REAL,'
             '$colhumidity REAL)');
   }
-
+//function to select temperature and time from sqllite for temperature chart
   Future<dynamic> getReadingTemList() async {
     Database db = await this.database;
     List<Map<dynamic, dynamic>> tempgraph = await db.rawQuery('select $coltime, $coltemperature FROM $readingstable ORDER BY $colId DESC limit 5');
     return tempgraph;
   }
-
+//function to select humidity and time from sqllite for humidity chart
   Future<dynamic> getReadinghumidityList() async {
     Database db = await this.database;
     List<Map<dynamic, dynamic>> humgraph = await db.rawQuery('select $coltime, $colhumidity From $readingstable ORDER BY $colId DESC limit 5' );
     return humgraph;
   }
-
+//function to drop database
   InsertDatareading(Datareading datareading) async{
     Database db = await this.database;
     var dataread = await db.insert(readingstable, datareading.toJson());
@@ -69,7 +69,7 @@ class DatabaseHelper{
     db.delete(readingstable).then((i)=>print('Database deleted'));
   }
 
-
+//function to select the whole data to getSCV function
   Future<dynamic> getReadalldataList() async {
     Database db = await this.database;
     List<Map<dynamic, dynamic>> alldata = await db.rawQuery('select $colId, $coltime, $coltemperature, $colhumidity From $readingstable ORDER BY $colId ASC' );

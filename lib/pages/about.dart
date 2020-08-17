@@ -18,7 +18,7 @@ class About extends StatefulWidget {
   @override
   _MyAboutPageState createState() => _MyAboutPageState();
 }
-
+// class and contruct to store data
 class Row {
   final int id;
   final String time;
@@ -82,7 +82,7 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
-
+// function to create CSV
     getCsv() async {
       DatabaseHelper().getReadalldataList().then((data) async {
         List<List<dynamic>> rowdata = List<List<dynamic>>();
@@ -121,7 +121,7 @@ class _MyAboutPageState extends State<About> {
         }
 
         print(directory.path);
-
+// getting current data and time
         String moment =
             "${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}_${DateTime.now().hour}.${DateTime.now().minute}";
 
@@ -134,7 +134,7 @@ class _MyAboutPageState extends State<About> {
         await OpenFile.open(f.path);
       });
     }
-
+// function to check permission
     Future<bool> checkPermission() async {
       var status = await Permission.storage.status;
 
@@ -149,7 +149,7 @@ class _MyAboutPageState extends State<About> {
         return status.isGranted;
       }
     }
-
+//function to download dattabase
     Future<void> _datadownload() async {
       return showDialog<void>(
         context: context,
@@ -190,10 +190,11 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
+    //function to publish in a topic
     void publish(String value) {
       Mqttwrapper().publish(value);
     }
-
+//function to download incubator data
     Future<void> _incudatadownload() async {
       return showDialog<void>(
         context: context,
@@ -230,7 +231,7 @@ class _MyAboutPageState extends State<About> {
       );
     }
 
-
+//function to delete incubator data
     Future<void> _incudatadelete() async {
       return showDialog<void>(
         context: context,
@@ -267,8 +268,7 @@ class _MyAboutPageState extends State<About> {
       );
     }
 
-
-
+//function to call about project dialog
     Future<void> _aboutProjet() async {
       return showDialog<void>(
         context: context,
@@ -300,7 +300,7 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
-
+//function to call about student dialog
     Future<void> _aboutStudent() async {
       return showDialog<void>(
         context: context,
@@ -330,7 +330,7 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
-
+//function to ccall contact us dialog
     Future<void> _contactUs() async {
       return showDialog<void>(
         context: context,
@@ -360,7 +360,7 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
-
+//function to call about IoTDev Lab dialog
     Future<void> _aboutIoTDevLab() async {
       return showDialog<void>(
         context: context,
@@ -391,7 +391,7 @@ class _MyAboutPageState extends State<About> {
         },
       );
     }
-
+//function to rescaffold ui
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -462,7 +462,7 @@ class _MyAboutPageState extends State<About> {
         ));
   }
 }
-
+// button to call the various function
 RaisedButton createButton(
   Color color,
   Future<void> Function() perform,

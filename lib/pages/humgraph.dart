@@ -12,7 +12,7 @@ class HumGraph extends StatefulWidget {
   @override
   _MyHumGraphPageState createState() => _MyHumGraphPageState();
 }
-
+//class to parse data into charts
 class SubscriberSeries {
   final String time;
   final double humidity;
@@ -25,7 +25,7 @@ class SubscriberSeries {
 class SubscriberChart extends StatelessWidget {
   final List<SubscriberSeries> data;
   SubscriberChart({@required this.data});
-
+//chart ui
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,7 +92,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
     Mqttwrapper().mqttController.stream.listen(listenToClient);
     fetchValues();
   }
-
+//function to update graph
   fetchValues() {
     DatabaseHelper().getReadinghumidityList().then((data) {
       for (Map map in data) {
@@ -109,7 +109,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
     await Future.delayed(Duration(seconds: 4));
     fetchValues();
   }
-
+//function to listen stream controller from MQTT and refresh ui
   void listenToClient(final data) {
     if (this.mounted) {
       setState(() {
@@ -125,7 +125,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
       });
     }
   }
-
+//main ui
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +157,7 @@ class _MyHumGraphPageState extends State<HumGraph> {
           child: drawer,
         ));
   }
-
+//humidity displaying ui
   _createListTile(String title, String value, String initials) {
     return Padding(
       padding: const EdgeInsets.only(left: 5.0, bottom: 5.0, right: 5.0),

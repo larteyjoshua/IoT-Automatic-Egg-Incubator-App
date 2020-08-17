@@ -11,7 +11,7 @@ class DashBoard extends StatefulWidget {
 
 class _MyHomePageState extends State<DashBoard> {
   //DatabaseHelper databaseHelper = DatabaseHelper();
-
+//declaration
   final Color primaryColor = Color(0xff99cc33);
   bool _isLoading = false;
   double _temp = 0.0;
@@ -20,14 +20,14 @@ class _MyHomePageState extends State<DashBoard> {
   @override
   void initState() {
     super.initState();
-    Mqttwrapper().mqttController.stream.listen(listenToClient);
+    Mqttwrapper().mqttController.stream.listen(listenToClient); //construct to listen to stream control
   }
 
 //  @override
 //  void dispose() {
 //
 //  }
-
+//function to grab data from stream control
   void listenToClient(Map data) {
     if (this.mounted) {
       setState(() {
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-
+//refresh ui
    final refreshed =  FlatButton.icon(
       icon: Icon(
         Icons.refresh,
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<DashBoard> {
         publish('refreshed');
         });
 
-
+//control ui
     final control = Center(
       child: Card(
         child: Column(
@@ -192,10 +192,11 @@ class _MyHomePageState extends State<DashBoard> {
       drawer: drawer,
     );
   }
+  //MQTT finction to publish message
   void publish(String value) {
     Mqttwrapper().publish(value);
   }
-
+  //displaying humidity and temperature Ui
   _createListTile(String title, String value, String initials) {
     return Padding(
       padding: const EdgeInsets.only(left: 5.0, bottom: 5.0, right: 5.0),

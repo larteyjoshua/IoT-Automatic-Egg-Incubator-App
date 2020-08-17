@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+//login ui
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Image.asset('assets/images/egg.jpg'),
       ),
     );
-
+//email field
     final email = TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
-
+//password field
     final password = TextFormField(
       controller: _passwordController,
       autofocus: false,
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
-
+//button to login
     final forgotLabel = FlatButton(
       child: Text(
         'Forgot Username and password? Check the device label?',
@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
       );
+      //mqtt instance and connection
       final client = await Mqttwrapper.instance.initializemqtt(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
